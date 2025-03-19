@@ -10,6 +10,7 @@ Future<void> main() async {
       tools: const [...DevicePreview.defaultTools],
       builder: (context) => const MyApp(),
     ),
+    // const MyApp(),
   );
 }
 
