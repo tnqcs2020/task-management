@@ -1,9 +1,11 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slider_drawer/flutter_slider_drawer.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:task_management/data/data_testing.dart';
 import 'package:task_management/extensions/space_exs.dart';
+import 'package:task_management/models/task_model.dart';
 import 'package:task_management/utils/app_colors.dart';
 import 'package:task_management/utils/app_string.dart';
 import 'package:task_management/utils/constants.dart';
@@ -19,42 +21,175 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final List<int> testing = [];
+  final List<int> testing = [1];
+  var scaffoldKey = GlobalKey<ScaffoldState>();
+  DateTime _focusedDay = DateTime.now();
+  DateTime _selectedDay = DateTime.now();
+
+  _onDaySelected(selectedDay, focusedDay) {
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay = focusedDay;
+    });
+  }
+
+  _onPageChanged(focusedDay) {
+    _focusedDay = focusedDay;
+  }
 
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
-    GlobalKey<SliderDrawerState> sliderDrawerKey =
-        GlobalKey<SliderDrawerState>();
-    return Scaffold(
-      backgroundColor: Colors.white,
-      floatingActionButton: FloatBtn(),
-      body: SliderDrawer(
-        key: sliderDrawerKey,
-        isDraggable: false,
-        animationDuration: 700,
-        appBar: SliderAppBar(
-          config: SliderAppBarConfig(
-            padding: EdgeInsets.only(top: 20, left: 15, right: 15),
-            title: Text(""),
-            drawerIconColor: Colors.black,
-            drawerIconSize: 30,
-            trailing: IconButton(
-              onPressed: () {
-                //remove task
-              },
-              icon: Icon(
-                CupertinoIcons.trash_fill,
-                size: 30,
-                color: Colors.black,
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          key: scaffoldKey,
+          backgroundColor: Colors.white,
+          floatingActionButton: FloatBtn(),
+          appBar: AppBar(
+            title: Text(
+              AppString.mainTitle.toUpperCase(),
+              style: textTheme.titleLarge,
+            ),
+            centerTitle: true,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: AppColors.primaryGradientColor,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
               ),
             ),
+            toolbarHeight: 70,
+            leading: GestureDetector(
+              onTap: () => scaffoldKey.currentState?.openDrawer(),
+              child: Icon(Icons.menu, color: Colors.black, size: 30),
+            ),
+            // actions: [
+            //   GestureDetector(
+            //     onTap: () {},
+            //     child: Icon(Icons.sort, color: Colors.black, size: 30),
+            //   ),
+            // ],
+            // actionsPadding: EdgeInsets.only(right: 15),
+            // bottom: TabBar(
+            //   indicatorColor: Colors.white,
+            //   unselectedLabelColor: Colors.white.withValues(alpha: 0.5),
+            //   labelColor: Colors.white,
+            //   labelPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+            //   indicatorSize: TabBarIndicatorSize.label,
+            //   tabs: [
+            //     Text(
+            //       "Hôm nay",
+            //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            //     ),
+            //     Text(
+            //       "Tháng này",
+            //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),
+            //     ),
+            //   ],
+            // ),
+          ),
+          drawer: CustomDrawer(),
+          body: Column(
+            children: [
+              TableCalendar(
+                locale: Localizations.localeOf(context).languageCode,
+                firstDay: DateTime.utc(2010, 10, 16),
+                lastDay: DateTime.utc(2030, 3, 14),
+                currentDay: DateTime.now(),
+                focusedDay: _focusedDay,
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                calendarFormat: CalendarFormat.week,
+                onDaySelected: _onDaySelected,
+                onPageChanged: _onPageChanged,
+                daysOfWeekStyle: const DaysOfWeekStyle(
+                  weekdayStyle: TextStyle(color: Colors.green),
+                  weekendStyle: TextStyle(color: Colors.red),
+                ),
+                calendarStyle: CalendarStyle(
+                  selectedDecoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: AppColors.primaryGradientColor,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  todayDecoration: BoxDecoration(
+                    border: Border.all(width: 1, color: Colors.blue),
+                    shape: BoxShape.circle,
+                  ),
+                  todayTextStyle: TextStyle(color: Colors.black),
+                ),
+                headerStyle: HeaderStyle(
+                  formatButtonVisible: false,
+                  titleCentered: true,
+                  titleTextFormatter:
+                      (date, locale) => DateFormat.yMMMMd(locale).format(date),
+                ),
+              ),
+              10.h,
+              Expanded(
+                child:
+                    sampleTasks.isNotEmpty
+                        ? ListView.builder(
+                          itemCount: sampleTasks.length,
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (context, taskIndex) {
+                            TaskModel task = sampleTasks[taskIndex];
+                            return Dismissible(
+                              direction: DismissDirection.horizontal,
+                              onDismissed: (_) {
+                                // remove current task
+                              },
+                              background: Padding(
+                                padding: const EdgeInsets.only(left: 35),
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.delete_outline,
+                                      color: Colors.grey,
+                                    ),
+                                    8.w,
+                                    Text(
+                                      AppString.deleteTask,
+                                      style: TextStyle(color: Colors.grey),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              key: Key(taskIndex.toString()),
+                              child: TaskWidget(task: task),
+                            );
+                          },
+                        )
+                        : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FadeInUp(
+                              child: SizedBox(
+                                width: 200,
+                                height: 200,
+                                child: Lottie.asset(
+                                  lottieURL,
+                                  animate: testing.isNotEmpty ? false : true,
+                                ),
+                              ),
+                            ),
+                            FadeInUp(
+                              from: 30,
+                              child: Text(AppString.doneAllTask),
+                            ),
+                          ],
+                        ),
+              ),
+            ],
           ),
         ),
-        sliderOpenSize: 300,
-        slider: CustomDrawer(),
-        sliderBoxShadow: SliderBoxShadow(),
-        child: _buildHomeBody(textTheme),
       ),
     );
   }
@@ -65,91 +200,87 @@ class _HomeViewState extends State<HomeView> {
       height: double.infinity,
       child: Column(
         children: [
-          Container(
-            margin: EdgeInsets.only(top: 60),
-            width: double.infinity,
-            height: 100,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 25,
-                  height: 25,
-                  child: CircularProgressIndicator(
-                    value: 1 / 3,
-                    backgroundColor: Colors.grey,
-                    valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
-                  ),
-                ),
-                25.w,
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(AppString.mainTitle, style: textTheme.displayLarge),
-                    3.h,
-                    Text("1 of 3 tasks", style: textTheme.titleMedium),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10),
-            child: Divider(thickness: 2, indent: 100),
-          ),
-          Expanded(
-            child:
-                testing.isNotEmpty
-                    // task is not empty
-                    ? ListView.builder(
-                      itemCount: testing.length,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, taskIndex) {
-                        return Dismissible(
-                          direction: DismissDirection.horizontal,
-                          onDismissed: (_) {
-                            // remove current task
-                          },
-                          background: Padding(
-                            padding: const EdgeInsets.only(left: 35),
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete_outline, color: Colors.grey),
-                                8.w,
-                                Text(
-                                  AppString.deleteTask,
-                                  style: TextStyle(color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                          ),
-                          key: Key(taskIndex.toString()),
-                          child: TaskWidget(),
-                        );
-                      },
-                    )
-                    // task is empty
-                    : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // lottie animate
-                        FadeInUp(
-                          child: SizedBox(
-                            width: 200,
-                            height: 200,
-                            child: Lottie.asset(
-                              lottieURL,
-                              animate: testing.isNotEmpty ? false : true,
-                            ),
-                          ),
-                        ),
-                        // sub text
-                        FadeInUp(from: 30, child: Text(AppString.doneAllTask)),
-                      ],
-                    ),
-          ),
-          100.h,
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 20),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       SizedBox(
+          //         width: 25,
+          //         height: 25,
+          //         child: CircularProgressIndicator(
+          //           value: 1 / 3,
+          //           backgroundColor: Colors.grey,
+          //           valueColor: AlwaysStoppedAnimation(AppColors.primaryColor),
+          //         ),
+          //       ),
+          //       25.w,
+          //       Text(
+          //         "Bạn đã hoàn thành 1 trong 3 công việc",
+          //         style: textTheme.displayMedium,
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          // Padding(
+          //   padding: const EdgeInsets.only(top: 10),
+          //   child: Divider(thickness: 2, indent: 100),
+          // ),
+          // Expanded(
+          //   child:
+          //       testing.isNotEmpty
+          //           // task is not empty
+          //           ? ListView.builder(
+          //             itemCount: 10,
+          //             scrollDirection: Axis.vertical,
+          //             itemBuilder: (context, taskIndex) {
+          //               return Dismissible(
+          //                 direction: DismissDirection.horizontal,
+          //                 onDismissed: (_) {
+          //                   // remove current task
+          //                 },
+          //                 background: Padding(
+          //                   padding: const EdgeInsets.only(left: 35),
+          //                   child: Row(
+          //                     children: [
+          //                       Icon(Icons.delete_outline, color: Colors.grey),
+          //                       8.w,
+          //                       Text(
+          //                         AppString.deleteTask,
+          //                         style: TextStyle(color: Colors.grey),
+          //                       ),
+          //                     ],
+          //                   ),
+          //                 ),
+          //                 key: Key(taskIndex.toString()),
+          //                 child: TaskWidget(
+          //                   isFinished: false,
+          //                   title: "Take your medicines",
+          //                   time: "9:00 AM",
+          //                 ),
+          //               );
+          //             },
+          //           )
+          //           // task is empty
+          //           : Column(
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             children: [
+          //               // lottie animate
+          //               FadeInUp(
+          //                 child: SizedBox(
+          //                   width: 200,
+          //                   height: 200,
+          //                   child: Lottie.asset(
+          //                     lottieURL,
+          //                     animate: testing.isNotEmpty ? false : true,
+          //                   ),
+          //                 ),
+          //               ),
+          //               // sub text
+          //               FadeInUp(from: 30, child: Text(AppString.doneAllTask)),
+          //             ],
+          //           ),
+          // ),
         ],
       ),
     );

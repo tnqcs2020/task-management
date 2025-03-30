@@ -1,6 +1,9 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:task_management/views/home/home_view.dart';
+import 'package:task_management/views/login/login_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,36 +27,35 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         textTheme: const TextTheme(
-          displayLarge: TextStyle(
+          displaySmall: TextStyle(color: Colors.black, fontSize: 15),
+          displayMedium: TextStyle(color: Colors.black, fontSize: 18),
+          displayLarge: TextStyle(color: Colors.black, fontSize: 23),
+          titleSmall: TextStyle(
+            fontSize: 18,
             color: Colors.black,
-            fontSize: 45,
             fontWeight: FontWeight.bold,
           ),
           titleMedium: TextStyle(
-            color: Colors.grey,
-            fontSize: 16,
-            fontWeight: FontWeight.w300,
-          ),
-          displayMedium: TextStyle(color: Colors.white, fontSize: 21),
-          displaySmall: TextStyle(
-            color: Color.fromARGB(255, 234, 234, 234),
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-          ),
-          headlineMedium: TextStyle(color: Colors.grey, fontSize: 17),
-          headlineSmall: TextStyle(color: Colors.grey, fontSize: 16),
-          titleSmall: TextStyle(
             color: Colors.black,
-            fontWeight: FontWeight.w500,
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
           ),
           titleLarge: TextStyle(
-            fontSize: 40,
+            fontSize: 35,
             color: Colors.black,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('vi', ''), const Locale('en', '')],
+      // home: LoginView(),
       home: HomeView(),
+      builder: EasyLoading.init(),
     );
   }
 }
