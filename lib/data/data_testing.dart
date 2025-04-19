@@ -1,10 +1,4 @@
 import 'package:task_management/models/task_model.dart';
-import 'package:task_management/models/user_model.dart';
-
-List<UserModel> sampleUsers = [
-  UserModel(username: "tnquang201", password: "Quang@123", name: "Nhựt Quang"),
-  UserModel(username: "admin", password: "admin@123", name: "Admin"),
-];
 List<TaskModel> sampleTasks = [
   TaskModel(
     title: "Học Flutter",

@@ -2,24 +2,37 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
+import 'package:task_management/utils/shared_user_data.dart';
+import 'package:task_management/utils/user_controller.dart';
 import 'package:task_management/views/home/home_view.dart';
 import 'package:task_management/views/login/login_view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedUserData sharedUserData = SharedUserData();
+  final userInfo = await sharedUserData.getUserInfo();
+  final userController = Get.put(UserController());
+  bool isLoggedIn = false;
+  if (userInfo['username'] != null &&
+      userInfo['username'] != "" &&
+      userInfo['name'] != null &&
+      userInfo['name'] != "") {
+    isLoggedIn = true;
+    userController.setUser(userInfo['username']!, userInfo['name']!);
+  }
   runApp(
     DevicePreview(
       enabled: true,
       tools: const [...DevicePreview.defaultTools],
-      builder: (context) => const MyApp(),
+      builder: (context) => MyApp(isLoggedIn: isLoggedIn),
     ),
-    // const MyApp(),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  final bool isLoggedIn;
+  const MyApp({super.key, required this.isLoggedIn});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -53,8 +66,8 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [const Locale('vi', ''), const Locale('en', '')],
-      // home: LoginView(),
-      home: HomeView(),
+      home: isLoggedIn ? const HomeView() : const LoginView(),
+      // home: HomeView(),
       builder: EasyLoading.init(),
     );
   }

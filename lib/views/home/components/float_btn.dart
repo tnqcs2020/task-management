@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:task_management/utils/app_colors.dart';
+import 'package:task_management/views/tasks/task_views.dart';
 
 class FloatBtn extends StatelessWidget {
   const FloatBtn({super.key});
@@ -9,7 +10,12 @@ class FloatBtn extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 25, bottom: 35),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TaskView()),
+          );
+        },
         child: Material(
           borderRadius: BorderRadius.circular(35),
           elevation: 2,

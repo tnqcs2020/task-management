@@ -36,7 +36,7 @@ class TaskWidget extends StatelessWidget {
                 border: Border.all(
                   color: task.isFinished == 1 ? Colors.red : Colors.green,
                   width: 4,
-                ), // Border.all
+                ),
               ),
             ),
             Column(
