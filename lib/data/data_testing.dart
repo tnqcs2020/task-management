@@ -1,43 +1,28 @@
 import 'package:task_management/models/task_model.dart';
+
 List<TaskModel> sampleTasks = [
   TaskModel(
     title: "Học Flutter",
     description: "Hoàn thành khóa học Flutter cơ bản.",
     createdAt: "2025-03-20",
-    deadline: "2025-03-30",
-    isFinished: 0,
-    imgUrl: "https://example.com/flutter.png",
+    deadline: "2025-04-01",
+    isFinished: 2,
+    createdBy: "tnquang",
     listWork: [
-      WorkModel(
-        title: "Xem bài giảng",
-        description: "Xem video hướng dẫn",
-        isFinished: 0,
-      ),
-      WorkModel(
-        title: "Làm bài tập",
-        description: "Thực hành code theo bài giảng",
-        isFinished: 0,
-      ),
+      WorkModel(title: "Xem bài giảng", isFinished: 0),
+      WorkModel(title: "Làm bài tập", isFinished: 0),
     ],
   ),
   TaskModel(
     title: "Đọc sách Clean Code",
     description: "Đọc xong chương đầu tiên của sách Clean Code.",
     createdAt: "2025-03-22",
-    deadline: "2025-04-05",
+    deadline: "2025-04-21",
     isFinished: 0,
-    imgUrl: "https://example.com/cleancode.png",
+    createdBy: "tnquang",
     listWork: [
-      WorkModel(
-        title: "Chương 1",
-        description: "Hoàn thành chương đầu tiên",
-        isFinished: 0,
-      ),
-      WorkModel(
-        title: "Ghi chú",
-        description: "Ghi lại các điểm quan trọng",
-        isFinished: 0,
-      ),
+      WorkModel(title: "Chương 1", isFinished: 0),
+      WorkModel(title: "Ghi chú", isFinished: 1),
     ],
   ),
   TaskModel(
@@ -46,18 +31,10 @@ List<TaskModel> sampleTasks = [
     createdAt: "2025-03-25",
     deadline: "2025-04-10",
     isFinished: 0,
-    imgUrl: "https://example.com/fastapi.png",
+    createdBy: "tnquang",
     listWork: [
-      WorkModel(
-        title: "Cài đặt FastAPI",
-        description: "Cấu hình môi trường",
-        isFinished: 1,
-      ),
-      WorkModel(
-        title: "Viết API CRUD",
-        description: "Xây dựng API cho To-Do",
-        isFinished: 0,
-      ),
+      WorkModel(title: "Cài đặt FastAPI", isFinished: 1),
+      WorkModel(title: "Viết API CRUD", isFinished: 0),
     ],
   ),
   TaskModel(
@@ -66,34 +43,70 @@ List<TaskModel> sampleTasks = [
     createdAt: "2025-03-27",
     deadline: "2025-04-15",
     isFinished: 1,
-    imgUrl: "https://example.com/workout.png",
+    createdBy: "tnquang",
     listWork: [
-      WorkModel(title: "Chạy bộ", description: "Chạy bộ 2km", isFinished: 1),
-      WorkModel(
-        title: "Hít đất",
-        description: "Thực hiện 20 lần hít đất",
-        isFinished: 1,
-      ),
+      WorkModel(title: "Chạy bộ", isFinished: 1),
+      WorkModel(title: "Hít đất", isFinished: 1),
     ],
   ),
   TaskModel(
-    title: "Học về Redis",
+    title: "Học về Redis 1",
     description: "Nắm vững cách sử dụng Redis để lưu trữ dữ liệu.",
     createdAt: "2025-03-29",
     deadline: "2025-04-20",
     isFinished: 0,
-    imgUrl: "https://example.com/redis.png",
+    createdBy: "tnquang",
     listWork: [
-      WorkModel(
-        title: "Cài đặt Redis",
-        description: "Cấu hình Redis trên máy",
-        isFinished: 1,
-      ),
-      WorkModel(
-        title: "Học Redis Streams",
-        description: "Tìm hiểu về Redis Streams",
-        isFinished: 0,
-      ),
+      WorkModel(title: "Cài đặt Redis", isFinished: 1),
+      WorkModel(title: "Học Redis Streams", isFinished: 0),
+    ],
+  ),
+  TaskModel(
+    title: "Học về Redis 2",
+    description: "Nắm vững cách sử dụng Redis để lưu trữ dữ liệu.",
+    createdAt: "2025-03-29",
+    deadline: "2025-04-20",
+    isFinished: 0,
+    createdBy: "tnquang",
+    listWork: [
+      WorkModel(title: "Cài đặt Redis", isFinished: 1),
+      WorkModel(title: "Học Redis Streams", isFinished: 0),
+    ],
+  ),
+  TaskModel(
+    title: "Học về Redis 3",
+    description: "Nắm vững cách sử dụng Redis để lưu trữ dữ liệu.",
+    createdAt: "2025-03-29",
+    deadline: "2025-04-20",
+    isFinished: 0,
+    createdBy: "tnquang",
+    listWork: [
+      WorkModel(title: "Cài đặt Redis", isFinished: 1),
+      WorkModel(title: "Học Redis Streams", isFinished: 0),
+    ],
+  ),
+  TaskModel(
+    title: "Học về Redis 4",
+    description: "Nắm vững cách sử dụng Redis để lưu trữ dữ liệu.",
+    createdAt: "2025-03-29",
+    deadline: "2025-04-20",
+    isFinished: 0,
+    createdBy: "tnquang",
+    listWork: [
+      WorkModel(title: "Cài đặt Redis", isFinished: 1),
+      WorkModel(title: "Học Redis Streams", isFinished: 0),
+    ],
+  ),
+  TaskModel(
+    title: "Học về Redis 5",
+    description: "Nắm vững cách sử dụng Redis để lưu trữ dữ liệu.",
+    createdAt: "2025-03-29",
+    deadline: "2025-04-20",
+    isFinished: 0,
+    createdBy: "tnquang",
+    listWork: [
+      WorkModel(title: "Cài đặt Redis", isFinished: 1),
+      WorkModel(title: "Học Redis Streams", isFinished: 0),
     ],
   ),
 ];

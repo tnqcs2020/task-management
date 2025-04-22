@@ -7,7 +7,9 @@ import 'package:task_management/utils/app_colors.dart';
 import 'package:task_management/utils/shared_user_data.dart';
 import 'package:task_management/utils/user_controller.dart';
 import 'package:task_management/views/home/home_view.dart';
+import 'package:task_management/views/introduction/intro_view.dart';
 import 'package:task_management/views/login/login_view.dart';
+// import 'package:task_management/views/profile/profile_view.dart';
 
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
@@ -21,8 +23,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   //Icon
   final List<IconData> icons = [
     CupertinoIcons.home,
-    CupertinoIcons.person_fill,
-    CupertinoIcons.settings,
+    // CupertinoIcons.person_fill,
     CupertinoIcons.info_circle_fill,
     CupertinoIcons.square_arrow_right,
   ];
@@ -30,30 +31,66 @@ class _CustomDrawerState extends State<CustomDrawer> {
   // Texts
   final List<String> texts = [
     "Trang chủ",
-    "Thông tin cá nhân",
-    "Cài đặt",
+    // "Thông tin cá nhân",
     "Giới thiệu",
     "Đăng xuất",
   ];
   final List<Function(BuildContext)> onTaps = [
     (context) {
       Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomeView()),
-      );
-    },
-    (context) {},
-    (context) {},
-    (context) {},
-    (context) async {
-      SharedUserData sharedUserData = SharedUserData();
-      await sharedUserData.logout();
-      EasyLoading.showSuccess('Đăng xuất thành công!');
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => LoginView()),
+        MaterialPageRoute(builder: (context) => HomeView()),
         (route) => false,
+      );
+    },
+    // (context) {
+    //   Navigator.pop(context);
+    //   Navigator.push(
+    //     context,
+    //     MaterialPageRoute(builder: (context) => ProfileView()),
+    //   );
+    // },
+    (context) {
+      Navigator.pop(context);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => IntroductionView()),
+        (route) => false,
+      );
+    },
+    (context) {
+      showCupertinoDialog<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            title: Text('Đăng xuất'),
+            content: Text('Bạn có chắc chắn muốn thoát?'),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                isDefaultAction: true,
+                child: Text('Đóng'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Đóng dialog
+                },
+              ),
+              CupertinoDialogAction(
+                isDestructiveAction: true,
+                child: Text('Đồng ý'),
+                onPressed: () async {
+                  SharedUserData sharedUserData = SharedUserData();
+                  await sharedUserData.logout();
+                  EasyLoading.showSuccess('Đăng xuất thành công!');
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginView()),
+                    (route) => false,
+                  );
+                },
+              ),
+            ],
+          );
+        },
       );
     },
   ];
@@ -61,9 +98,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).textTheme;
+    double screenWidth = MediaQuery.of(context).size.width;
     return Drawer(
       backgroundColor: Colors.transparent,
-      width: 330,
+      width: screenWidth * 0.75,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 90),
         decoration: BoxDecoration(
@@ -86,10 +124,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
             Obx(
               () => Text(
                 userController.name.value,
-                style: textTheme.displayMedium,
+                style: textTheme.displaySmall,
               ),
             ),
-            // Text('Flutter dev', style: textTheme.displaySmall),
+            Obx(
+              () => Text(
+                userController.username.value,
+                style: textTheme.displaySmall,
+              ),
+            ),
             Expanded(
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),

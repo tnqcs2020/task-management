@@ -13,7 +13,7 @@ class FloatBtn extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => TaskView()),
+            MaterialPageRoute(builder: (context) => TaskView(isModified: true)),
           );
         },
         child: Material(

@@ -22,12 +22,12 @@ Future<void> main() async {
     userController.setUser(userInfo['username']!, userInfo['name']!);
   }
   runApp(
-    // DevicePreview(
-    //   enabled: true,
-    //   tools: const [...DevicePreview.defaultTools],
-    //   builder: (context) => MyApp(isLoggedIn: isLoggedIn),
-    // ),
-    MyApp(isLoggedIn: isLoggedIn),
+    DevicePreview(
+      enabled: true,
+      tools: const [...DevicePreview.defaultTools],
+      builder: (context) => MyApp(isLoggedIn: isLoggedIn),
+    ),
+    // MyApp(isLoggedIn: isLoggedIn),
   );
 }
 

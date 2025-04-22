@@ -1,19 +1,32 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:task_management/models/task_model.dart';
 import 'package:task_management/utils/app_colors.dart';
-import 'package:task_management/utils/app_string.dart';
+import 'package:task_management/views/tasks/task_views.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key, required this.scaffoldKey});
-  final GlobalKey<ScaffoldState> scaffoldKey;
+  const CustomAppBar({
+    super.key,
+    this.scaffoldKey,
+    this.title,
+    this.isMenu = false,
+    this.isModified = false,
+    this.task,
+  });
+  final GlobalKey<ScaffoldState>? scaffoldKey;
+  final String? title;
+  final bool isMenu;
+  final bool isModified;
+  final TaskModel? task;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        AppString.mainTitle.toUpperCase(),
+        title != null ? title! : "Taskment",
         style: TextStyle(
           fontSize: 35,
-          color: Colors.black,
+          color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -27,26 +40,57 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-      leading: GestureDetector(
-        onTap: () => scaffoldKey.currentState?.openDrawer(),
-        child: Icon(Icons.menu, color: Colors.black, size: 30),
+      leading: IconButton(
+        onPressed:
+            () =>
+                scaffoldKey != null || isMenu
+                    ? scaffoldKey!.currentState?.openDrawer()
+                    : Navigator.pop(context),
+        icon: Icon(
+          scaffoldKey != null || isMenu ? Icons.menu : CupertinoIcons.back,
+          color: Colors.white,
+          size: 30,
+        ),
       ),
-      bottom: TabBar(
-        indicatorColor: Colors.amberAccent,
-        indicatorSize: TabBarIndicatorSize.tab,
-        labelColor: Colors.white,
-        labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        unselectedLabelStyle: TextStyle(fontSize: 16),
-        unselectedLabelColor: Colors.grey[400],
-        tabs: [
-          Tab(text: 'Đang thực hiện'),
-          Tab(text: 'Hoàn thành'),
-          Tab(text: 'Trễ hạn'),
-        ],
-      ),
+      actions:
+          isModified && task != null
+              ? [
+                IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => TaskView(task: task, isModified: true),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.edit_note, color: Colors.white, size: 35),
+                ),
+              ]
+              : null,
+      bottom:
+          scaffoldKey != null && title == null
+              ? TabBar(
+                indicatorColor: Colors.amber,
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelColor: Colors.white,
+                labelStyle: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                unselectedLabelStyle: TextStyle(fontSize: 16),
+                unselectedLabelColor: Colors.grey[400],
+                tabs: [
+                  Tab(text: "Đang làm"),
+                  Tab(text: "Hoàn thành"),
+                  Tab(text: "Trễ hạn"),
+                ],
+              )
+              : null,
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(80);
+  Size get preferredSize => Size.fromHeight(title != null ? 60 : 110);
 }

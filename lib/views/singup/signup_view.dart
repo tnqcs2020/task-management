@@ -56,14 +56,14 @@ class _SignupViewState extends State<SignupView> {
       body: Form(
         key: _formKey,
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 100),
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 70),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Center(
                 child: Text(
-                  "Task Management",
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  "Taskment",
+                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                 ),
               ),
               Center(
@@ -72,7 +72,7 @@ class _SignupViewState extends State<SignupView> {
                   style: TextStyle(fontSize: 18, color: Colors.grey),
                 ),
               ),
-              45.h,
+              35.h,
               Text(
                 "Họ và tên",
                 style: TextStyle(fontSize: 23, fontWeight: FontWeight.w500),
@@ -159,6 +159,7 @@ class _SignupViewState extends State<SignupView> {
                 },
                 onFieldSubmitted: (_) => _signup(),
               ),
+              25.h,
               Expanded(
                 child: Center(
                   child: GestureDetector(

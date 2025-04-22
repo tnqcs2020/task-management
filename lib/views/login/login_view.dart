@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:get/get.dart';
 import 'package:task_management/extensions/space_exs.dart';
 import 'package:task_management/utils/app_colors.dart';
 import 'package:task_management/utils/http_services.dart';
 import 'package:task_management/utils/shared_user_data.dart';
+import 'package:task_management/utils/user_controller.dart';
 import 'package:task_management/views/home/home_view.dart';
 import 'package:task_management/views/singup/signup_view.dart';
 
@@ -18,6 +20,7 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
+  final userController = Get.put(UserController());
   void _login() async {
     if (_formKey.currentState!.validate()) {
       HttpServices httpServices = HttpServices();
@@ -31,6 +34,7 @@ class _LoginViewState extends State<LoginView> {
           result['username'],
           result['username'],
         );
+        userController.setUser(result['username']!, result['username']!);
         EasyLoading.showSuccess('Đăng nhập thành công!');
         Navigator.push(
           context,
@@ -55,8 +59,8 @@ class _LoginViewState extends State<LoginView> {
               45.h,
               Center(
                 child: Text(
-                  "Task Management",
-                  style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
+                  "Taskment",
+                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
                 ),
               ),
               Center(
