@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:task_management/data/data_testing.dart';
 import 'package:task_management/extensions/space_exs.dart';
 import 'package:task_management/models/task_model.dart';
 import 'package:task_management/utils/app_colors.dart';
