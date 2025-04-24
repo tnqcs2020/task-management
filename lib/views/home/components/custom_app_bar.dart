@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:task_management/models/task_model.dart';
 import 'package:task_management/utils/app_colors.dart';
-import 'package:task_management/views/tasks/task_views.dart';
+import 'package:task_management/utils/auth_services.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -10,13 +10,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.scaffoldKey,
     this.title,
     this.isMenu = false,
-    this.isModified = false,
+    this.isAction = false,
     this.task,
   });
   final GlobalKey<ScaffoldState>? scaffoldKey;
   final String? title;
   final bool isMenu;
-  final bool isModified;
+  final bool isAction;
   final TaskModel? task;
 
   @override
@@ -25,7 +25,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
         title != null ? title! : "Taskment",
         style: TextStyle(
-          fontSize: 35,
+          fontSize: title != null ? 25 : 30,
           color: Colors.white,
           fontWeight: FontWeight.bold,
         ),
@@ -53,21 +53,28 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       actions:
-          isModified && task != null
-              ? [
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) => TaskView(task: task, isModified: true),
+          isAction
+              ? AuthServices.userCtrl.isModified.value == false && task != null
+                  ? [
+                    IconButton(
+                      onPressed: () {
+                        AuthServices.userCtrl.isModified.value = true;
+                      },
+                      icon: Icon(
+                        Icons.edit_note,
+                        color: Colors.white,
+                        size: 35,
                       ),
-                    );
-                  },
-                  icon: Icon(Icons.edit_note, color: Colors.white, size: 35),
-                ),
-              ]
+                    ),
+                  ]
+                  : [
+                    IconButton(
+                      onPressed: () {
+                        AuthServices.userCtrl.isModified.value = false;
+                      },
+                      icon: Icon(Icons.close, color: Colors.white, size: 35),
+                    ),
+                  ]
               : null,
       bottom:
           scaffoldKey != null && title == null

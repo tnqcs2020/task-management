@@ -2,9 +2,8 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:get/get.dart';
+import 'package:task_management/utils/auth_services.dart';
 import 'package:task_management/utils/shared_user_data.dart';
-import 'package:task_management/utils/user_controller.dart';
 import 'package:task_management/views/home/home_view.dart';
 import 'package:task_management/views/login/login_view.dart';
 
@@ -12,22 +11,23 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SharedUserData sharedUserData = SharedUserData();
   final userInfo = await sharedUserData.getUserInfo();
-  final userController = Get.put(UserController());
   bool isLoggedIn = false;
   if (userInfo['username'] != null &&
       userInfo['username'] != "" &&
       userInfo['name'] != null &&
       userInfo['name'] != "") {
     isLoggedIn = true;
-    userController.setUser(userInfo['username']!, userInfo['name']!);
+    AuthServices.userCtrl.setUser(userInfo['username']!, userInfo['name']!);
   }
+  AuthServices.getTasks();
+  AuthServices.checkOverdue();
   runApp(
-    DevicePreview(
-      enabled: true,
-      tools: const [...DevicePreview.defaultTools],
-      builder: (context) => MyApp(isLoggedIn: isLoggedIn),
-    ),
-    // MyApp(isLoggedIn: isLoggedIn),
+    // DevicePreview(
+    //   enabled: true,
+    //   tools: const [...DevicePreview.defaultTools],
+    //   builder: (context) => MyApp(isLoggedIn: isLoggedIn),
+    // ),
+    MyApp(isLoggedIn: isLoggedIn),
   );
 }
 

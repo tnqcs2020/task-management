@@ -124,18 +124,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
             Obx(
               () => Text(
                 userController.name.value,
-                style: textTheme.displaySmall,
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
               ),
             ),
             Obx(
               () => Text(
-                userController.username.value,
-                style: textTheme.displaySmall,
+                "(${userController.username.value})",
+                style: TextStyle(fontSize: 20, color: Colors.white70),
               ),
             ),
+            30.h,
             Expanded(
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
                 width: double.infinity,
                 child: ListView.builder(
                   physics: NeverScrollableScrollPhysics(),

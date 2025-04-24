@@ -1,12 +1,15 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:task_management/data/data_testing.dart';
 import 'package:task_management/extensions/space_exs.dart';
 import 'package:task_management/models/task_model.dart';
 import 'package:task_management/utils/app_colors.dart';
+import 'package:task_management/utils/auth_services.dart';
 import 'package:task_management/utils/constants.dart';
 import 'package:task_management/views/home/widgets/task_widget.dart';
 import 'package:task_management/views/tasks/task_views.dart';
@@ -19,7 +22,6 @@ class CurrentTask extends StatefulWidget {
 }
 
 class _CurrentTaskState extends State<CurrentTask> {
-  final List<int> testing = [];
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
   _onDaySelected(selectedDay, focusedDay) {
@@ -32,7 +34,7 @@ class _CurrentTaskState extends State<CurrentTask> {
   bool isDateBetween(DateTime selectedDate, String startDate, String endDate) {
     DateTime start = DateTime.parse(startDate);
     DateTime temp = DateTime.parse(endDate);
-    DateTime end = DateTime(temp.year, temp.month, temp.day, 23, 59);
+    DateTime end = DateTime(temp.year, temp.month, temp.day, 23, 59, 59);
     return (selectedDate.isAfter(start) ||
             selectedDate.isAtSameMomentAs(start)) &&
         (selectedDate.isBefore(end) || selectedDate.isAtSameMomentAs(end));
@@ -95,61 +97,82 @@ class _CurrentTaskState extends State<CurrentTask> {
         Text(
           "Bạn đang chọn ngày ${DateFormat.yMMMMd("vi").format(_selectedDay)}",
         ),
-        Expanded(
-          child:
-              isHaveTask(_selectedDay, sampleTasks)
-                  ? ListView.builder(
-                    itemCount: sampleTasks.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, taskIndex) {
-                      TaskModel task = sampleTasks[taskIndex];
-                      if (!isDateBetween(
-                        _selectedDay,
-                        task.createdAt!,
-                        task.deadline!,
-                      )) {
-                        return SizedBox();
-                      }
-                      if (task.isFinished != 0) return SizedBox();
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                      TaskView(task: task, isModified: false),
-                            ),
-                          );
-                        },
-                        child: TaskWidget(task: task),
-                      );
-                    },
-                  )
-                  : Padding(
-                    padding: const EdgeInsets.only(top: 100),
-                    child: Column(
-                      children: [
-                        FadeInUp(
-                          child: SizedBox(
-                            width: 200,
-                            height: 200,
-                            child: Lottie.asset(
-                              lottieURL,
-                              animate: testing.isNotEmpty ? false : true,
-                            ),
+        Obx(
+          () => Expanded(
+            child:
+                AuthServices.userCtrl.tasks.isNotEmpty
+                    ? isHaveTask(_selectedDay, AuthServices.userCtrl.tasks)
+                        ? ListView.builder(
+                          itemCount: AuthServices.userCtrl.tasks.length,
+                          scrollDirection: Axis.vertical,
+                          itemBuilder: (context, taskIndex) {
+                            TaskModel task =
+                                AuthServices.userCtrl.tasks[taskIndex];
+                            if (!isDateBetween(
+                              _selectedDay,
+                              task.createdAt!,
+                              task.deadline!,
+                            )) {
+                              return SizedBox();
+                            }
+                            if (task.isFinished != 0) return SizedBox();
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => TaskView(
+                                            task: task,
+                                            isModified: false,
+                                          ),
+                                    ),
+                                  );
+                                },
+                                child: TaskWidget(task: task),
+                              ),
+                            );
+                          },
+                        )
+                        : Padding(
+                          padding: const EdgeInsets.only(top: 100),
+                          child: Column(
+                            children: [
+                              FadeInUp(
+                                child: SizedBox(
+                                  width: 200,
+                                  height: 200,
+                                  child: Lottie.asset(lottieURL, animate: true),
+                                ),
+                              ),
+                              FadeInUp(
+                                from: 30,
+                                child: Text(
+                                  "Tuyệt vời! Hôm nay không có công việc.",
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
+                    : Padding(
+                      padding: const EdgeInsets.only(bottom: 150),
+                      child: Center(
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: LoadingIndicator(
+                            indicatorType: Indicator.ballSpinFadeLoader,
+                            colors: const [Colors.indigo],
                           ),
                         ),
-                        FadeInUp(
-                          from: 30,
-                          child: Text(
-                            "Tuyệt vời! Hôm nay không có công việc.",
-                            style: TextStyle(fontSize: 18),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+          ),
         ),
       ],
     );

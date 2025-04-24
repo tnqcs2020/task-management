@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:task_management/models/task_model.dart';
 
 class HttpServices {
   final String baseUrl = "https://todo-list-caohoc.up.railway.app";
@@ -18,14 +19,14 @@ class HttpServices {
           response.statusCode == 204) {
         return {
           "success": true,
-          "message": json["message"],
           "username": json["username"],
+          "name": json["name"],
         };
       } else {
         return {"success": false};
       }
     } catch (e) {
-      return {"success": false, "message": "An error occurred: $e"};
+      return {"success": false};
     }
   }
 
@@ -50,8 +51,8 @@ class HttpServices {
           response.statusCode == 204) {
         return {
           "success": true,
-          "message": json["message"],
           "username": json["username"],
+          "name": json["name"],
         };
       } else {
         return {"success": false};
@@ -61,33 +62,24 @@ class HttpServices {
     }
   }
 
-  Future<Map<String, dynamic>> addTask(
-    String username,
-    Map<String, dynamic> task,
-  ) async {
+  Future<Map<String, dynamic>> addTask(TaskModel task) async {
     final url = Uri.parse('$baseUrl/add-task');
-    final body = jsonEncode({"username": username, "task": task});
-
+    final body = jsonEncode({
+      "username": task.createdBy,
+      "task": task.toJson(),
+    });
     try {
       final response = await http.post(url, headers: headers, body: body);
       final json = jsonDecode(response.body);
       if (response.statusCode == 200 ||
           response.statusCode == 201 ||
           response.statusCode == 204) {
-        return {
-          "success": true,
-          "message": json["message"] ?? "Task added",
-          "data": json,
-        };
+        return {"success": true, "data": json['task']};
       } else {
-        return {
-          "success": false,
-          "message": json["message"] ?? "Failed to add task",
-          "data": json,
-        };
+        return {"success": false};
       }
     } catch (e) {
-      return {"success": false, "message": "An error occurred: $e"};
+      return {"success": false, "message": "Error: $e"};
     }
   }
 
@@ -98,13 +90,19 @@ class HttpServices {
     try {
       final response = await http.post(url, headers: headers, body: body);
       final json = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        return {"success": true, "message": "Tasks retrieved", "data": json};
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204) {
+        return {
+          "success": true,
+          "message": "Tasks retrieved",
+          "data": json["tasks"],
+        };
       } else {
         return {
           "success": false,
           "message": "Failed to get tasks",
-          "data": json,
+          "data": json["tasks"],
         };
       }
     } catch (e) {
@@ -121,47 +119,37 @@ class HttpServices {
 
     try {
       final response = await http.delete(url, headers: headers, body: body);
-      final json = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        return {"success": true, "message": "Task deleted", "data": json};
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204) {
+        return {"success": true};
       } else {
-        return {
-          "success": false,
-          "message": "Failed to delete task",
-          "data": json,
-        };
+        return {"success": false};
       }
     } catch (e) {
-      return {"success": false, "message": "An error occurred: $e"};
+      return {"success": false};
     }
   }
 
-  Future<Map<String, dynamic>> updateTask(
-    String username,
-    int taskId,
-    Map<String, dynamic> task,
-  ) async {
+  Future<Map<String, dynamic>> updateTask(TaskModel task) async {
     final url = Uri.parse('$baseUrl/update-task');
     final body = jsonEncode({
-      "username": username,
-      "task_id": taskId,
-      "task": task,
+      "username": task.createdBy,
+      "task": task.toJson(),
+      "task_id": task.taskID,
     });
-
     try {
       final response = await http.put(url, headers: headers, body: body);
       final json = jsonDecode(response.body);
-      if (response.statusCode == 200) {
-        return {"success": true, "message": "Task updated", "data": json};
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 204) {
+        return {"success": true, "data": json['task']};
       } else {
-        return {
-          "success": false,
-          "message": "Failed to update task",
-          "data": json,
-        };
+        return {"success": false};
       }
     } catch (e) {
-      return {"success": false, "message": "An error occurred: $e"};
+      return {"success": false, "message": "Error: $e"};
     }
   }
 }

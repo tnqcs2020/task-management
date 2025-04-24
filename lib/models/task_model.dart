@@ -5,6 +5,8 @@ class TaskModel {
   String? deadline;
   int? isFinished;
   String? createdBy;
+  String? doneAt;
+  String? taskID;
   List<WorkModel>? listWork;
 
   TaskModel({
@@ -14,6 +16,8 @@ class TaskModel {
     this.deadline,
     this.isFinished,
     this.createdBy,
+    this.doneAt,
+    this.taskID,
     this.listWork,
   });
 
@@ -23,7 +27,9 @@ class TaskModel {
     createdAt = json['created_at'];
     deadline = json['deadline'];
     isFinished = json['is_finished'];
-    createdBy = json['img_url'];
+    createdBy = json['created_by'];
+    doneAt = json['done_at'];
+    taskID = json['task_id'];
     if (json['list_work'] != null) {
       listWork = <WorkModel>[];
       json['list_work'].forEach((v) {
@@ -39,7 +45,9 @@ class TaskModel {
     data['created_at'] = createdAt;
     data['deadline'] = deadline;
     data['is_finished'] = isFinished;
-    data['img_url'] = createdBy;
+    data['created_by'] = createdBy;
+    data['done_at'] = doneAt;
+    data['task_id'] = taskID;
     if (listWork != null) {
       data['list_work'] = listWork!.map((v) => v.toJson()).toList();
     }

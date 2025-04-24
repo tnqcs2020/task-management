@@ -11,8 +11,8 @@ class CustomBtn extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 170,
-        height: 50,
+        width: 160,
+        height: 45,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(25)),
           gradient: LinearGradient(
@@ -25,7 +25,7 @@ class CustomBtn extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 17,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),

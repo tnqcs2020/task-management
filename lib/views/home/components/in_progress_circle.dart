@@ -14,31 +14,37 @@ class InProgressCircle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircularPercentIndicator(
-      radius: 20,
+      radius: 13,
       lineWidth: 5,
       percent: percent,
-      center:
-          percent != 0.0
-              ? Text(
-                "${(percent * 100).toInt()}%",
-                style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-              : null,
+      // center:
+      //     percent != 0.0
+      //         ? Text(
+      //           "${(percent * 100).toInt()}%",
+      //           style: const TextStyle(
+      //             fontSize: 9,
+      //             fontWeight: FontWeight.bold,
+      //           ),
+      //         )
+      //         : null,
       progressColor:
           isFinished == 0
-              ? Colors.orange
+              ? percent != 0.0
+                  ? Colors.orange.shade700
+                  : Colors.orange.shade200
               : isFinished == 1
-              ? Colors.green
-              : Colors.red,
+              ? percent != 0.0
+                  ? Colors.green.shade700
+                  : Colors.green.shade200
+              : percent != 0.0
+              ? Colors.red.shade700
+              : Colors.red.shade200,
       backgroundColor:
           isFinished == 0
-              ? Colors.orange.shade100
+              ? Colors.orange.shade200
               : isFinished == 1
-              ? Colors.green.shade100
-              : Colors.red.shade100,
+              ? Colors.green.shade200
+              : Colors.red.shade200,
       circularStrokeCap: CircularStrokeCap.round,
       animation: false,
     );
