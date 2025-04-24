@@ -498,7 +498,7 @@ class _TaskViewState extends State<TaskView> {
                                               width: 130,
                                               child: Center(
                                                 child: Text(
-                                                  "Chọn ",
+                                                  "Ngày ",
                                                   style: TextStyle(
                                                     fontSize: 20,
                                                   ),
@@ -615,7 +615,7 @@ class _TaskViewState extends State<TaskView> {
                   if (AuthServices.userCtrl.isModified.value)
                     Container(
                       color: Colors.blue.withValues(alpha: 0.05),
-                      height: 80,
+                      height: 90,
                       child: Row(
                         mainAxisAlignment:
                             widget.task == null || _isFinished == 2
@@ -646,6 +646,7 @@ class _TaskViewState extends State<TaskView> {
                                         ? "Cập nhật thành công!"
                                         : 'Thêm thành công!',
                                   );
+                                  Navigator.of(context).pop();
                                 } catch (e) {
                                   EasyLoading.dismiss();
                                   EasyLoading.showError('Có lỗi xảy ra!');
@@ -655,7 +656,6 @@ class _TaskViewState extends State<TaskView> {
                                   'Bạn cần phải chọn hạn hoàn thành!',
                                 );
                               }
-                              Navigator.of(context).pop();
                             },
                             child: Container(
                               width: 160,
@@ -725,7 +725,7 @@ class _TaskViewState extends State<TaskView> {
                                                           )
                                                           .toString();
                                                 });
-                                                EasyLoading.dismiss();
+
                                                 EasyLoading.showSuccess(
                                                   "Đã đánh dấu hoàn thành!",
                                                 );

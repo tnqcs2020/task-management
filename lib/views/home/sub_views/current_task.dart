@@ -41,12 +41,14 @@ class _CurrentTaskState extends State<CurrentTask> {
 
   bool isHaveTask(DateTime day, List<TaskModel> tasks) {
     bool isHave = false;
-    tasks.forEach((element) {
-      if (isDateBetween(day, element.createdAt!, element.deadline!) &&
-          element.isFinished == 0) {
-        isHave = true;
-      }
-    });
+    if (tasks.isNotEmpty) {
+      tasks.forEach((element) {
+        if (isDateBetween(day, element.createdAt!, element.deadline!) &&
+            element.isFinished == 0) {
+          isHave = true;
+        }
+      });
+    }
     return isHave;
   }
 
@@ -64,7 +66,6 @@ class _CurrentTaskState extends State<CurrentTask> {
           startingDayOfWeek: StartingDayOfWeek.monday,
           calendarFormat: CalendarFormat.week,
           onDaySelected: _onDaySelected,
-          // onPageChanged: _onPageChanged,
           daysOfWeekStyle: const DaysOfWeekStyle(
             weekdayStyle: TextStyle(color: Colors.green),
             weekendStyle: TextStyle(color: Colors.red),
@@ -96,10 +97,12 @@ class _CurrentTaskState extends State<CurrentTask> {
         Text(
           "Bạn đang chọn ngày ${DateFormat.yMMMMd("vi").format(_selectedDay)}",
         ),
+        10.h,
         Obx(
           () => Expanded(
             child:
-                AuthServices.userCtrl.tasks.isNotEmpty
+                AuthServices.userCtrl.isLoading.value == false ||
+                        AuthServices.userCtrl.tasks.isNotEmpty
                     ? isHaveTask(_selectedDay, AuthServices.userCtrl.tasks)
                         ? ListView.builder(
                           itemCount: AuthServices.userCtrl.tasks.length,

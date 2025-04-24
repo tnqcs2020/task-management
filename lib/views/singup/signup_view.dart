@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:get/get.dart';
 import 'package:task_management/extensions/space_exs.dart';
 import 'package:task_management/utils/app_colors.dart';
+import 'package:task_management/utils/auth_services.dart';
 import 'package:task_management/utils/custom_field.dart';
 import 'package:task_management/utils/http_services.dart';
 import 'package:task_management/utils/shared_user_data.dart';
-import 'package:task_management/utils/user_controller.dart';
 import 'package:task_management/views/home/home_view.dart';
 import 'package:task_management/views/login/login_view.dart';
 
@@ -23,10 +22,10 @@ class _SignupViewState extends State<SignupView> {
   final TextEditingController _passwordCtrl = TextEditingController();
   final TextEditingController _rePasswordCtrl = TextEditingController();
   final TextEditingController _nameCtrl = TextEditingController();
-  final userController = Get.put(UserController());
 
   void _signup() async {
     if (_formKey.currentState!.validate()) {
+      EasyLoading.show(status: 'Vui lòng chờ trong giây lát...');
       HttpServices httpServices = HttpServices();
       final result = await httpServices.register(
         _usernameCtrl.text,
@@ -36,8 +35,10 @@ class _SignupViewState extends State<SignupView> {
       if (result['success']) {
         SharedUserData sharedUserData = SharedUserData();
         await sharedUserData.saveUserInfo(result['username'], result['name']);
-        userController.setUser(result['username']!, result['name']);
-        EasyLoading.showSuccess('Đăng ký thành công!');
+        AuthServices.userCtrl.setUser(result['username']!, result['name']!);
+        await AuthServices.getTasks();
+        await AuthServices.checkOverdue();
+        EasyLoading.dismiss();
         Navigator.pushReplacement(
           // ignore: use_build_context_synchronously
           context,

@@ -46,6 +46,9 @@ class AuthServices {
   }
 
   static getTasks() async {
+    if (AuthServices.userCtrl.tasks.isNotEmpty) {
+      AuthServices.userCtrl.isLoading.value = true;
+    }
     HttpServices httpServices = HttpServices();
     final result = await httpServices.getTasks(userCtrl.username.value);
     if (result['success'] && result['data'].isNotEmpty) {
@@ -56,6 +59,13 @@ class AuthServices {
               .toList();
       tasks.sort((a, b) => a.title!.compareTo(b.title!));
       userCtrl.tasks.value = tasks;
+      if (AuthServices.userCtrl.tasks.isNotEmpty) {
+        AuthServices.userCtrl.isLoading.value = false;
+      }
+    } else {
+      if (AuthServices.userCtrl.tasks.isNotEmpty) {
+        AuthServices.userCtrl.isLoading.value = false;
+      }
     }
   }
 
@@ -90,12 +100,9 @@ class AuthServices {
     }
   }
 
-  static deleteTask(String taskID) async {
+  static deleteTask(String username, String taskID) async {
     HttpServices httpServices = HttpServices();
-    final result = await httpServices.deleteTask(
-      userCtrl.username.value,
-      taskID,
-    );
+    final result = await httpServices.deleteTask(username, taskID);
     if (result['success']) {
       await getTasks();
     }

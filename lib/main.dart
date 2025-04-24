@@ -17,9 +17,9 @@ Future<void> main() async {
       userInfo['name'] != "") {
     isLoggedIn = true;
     AuthServices.userCtrl.setUser(userInfo['username']!, userInfo['name']!);
+    AuthServices.getTasks();
+    AuthServices.checkOverdue();
   }
-  AuthServices.getTasks();
-  AuthServices.checkOverdue();
   runApp(
     // DevicePreview(
     //   enabled: true,

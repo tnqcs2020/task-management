@@ -13,6 +13,7 @@ class UserController extends GetxController {
       <DateTime, List<TaskModel>>{}.obs;
   RxList<DateTime> groupDateOverdue = <DateTime>[].obs;
   Rx<bool> isModified = false.obs;
+  Rx<bool> isLoading = true.obs;
 
   // Set user data
   void setUser(String u, String n) {
@@ -69,7 +70,7 @@ class UserController extends GetxController {
   }
 
   // Clear user data (e.g. on logout)
-  void clearUser() {
+  clearUser() {
     username.value = '';
     name.value = '';
     tasks.value = [];
@@ -77,5 +78,7 @@ class UserController extends GetxController {
     groupDateDone.value = [];
     tasksByDateOverdue.value = {};
     groupDateOverdue.value = [];
+    isModified.value = false;
+    isLoading.value = true;
   }
 }

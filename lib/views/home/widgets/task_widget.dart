@@ -253,7 +253,14 @@ class TaskWidget extends StatelessWidget {
                                   Navigator.of(context).pop();
                                   EasyLoading.show(status: 'Đang xoá...');
                                   try {
-                                    await AuthServices.deleteTask(task.taskID!);
+                                    if (AuthServices.userCtrl.tasks.length ==
+                                        1) {
+                                      AuthServices.userCtrl.tasks.value = [];
+                                    }
+                                    await AuthServices.deleteTask(
+                                      task.createdBy!,
+                                      task.taskID!,
+                                    );
                                     EasyLoading.dismiss();
                                     EasyLoading.showSuccess('Đã xoá!');
                                   } catch (e) {

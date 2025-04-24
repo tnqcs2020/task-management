@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:task_management/extensions/space_exs.dart';
 import 'package:task_management/utils/app_colors.dart';
+import 'package:task_management/utils/auth_services.dart';
 import 'package:task_management/utils/shared_user_data.dart';
 import 'package:task_management/utils/user_controller.dart';
 import 'package:task_management/views/home/home_view.dart';
@@ -19,7 +19,7 @@ class CustomDrawer extends StatefulWidget {
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  final userController = Get.find<UserController>();
+  final userCtrl = Get.find<UserController>();
   //Icon
   final List<IconData> icons = [
     CupertinoIcons.home,
@@ -80,12 +80,12 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 onPressed: () async {
                   SharedUserData sharedUserData = SharedUserData();
                   await sharedUserData.logout();
-                  EasyLoading.showSuccess('Đăng xuất thành công!');
                   Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(builder: (context) => LoginView()),
                     (route) => false,
                   );
+                  AuthServices.userCtrl.clearUser();
                 },
               ),
             ],
@@ -123,7 +123,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             20.h,
             Obx(
               () => Text(
-                userController.name.value,
+                userCtrl.name.value,
                 style: TextStyle(
                   fontSize: 30,
                   fontWeight: FontWeight.w500,
@@ -133,7 +133,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             ),
             Obx(
               () => Text(
-                "(${userController.username.value})",
+                "(${userCtrl.username.value})",
                 style: TextStyle(fontSize: 20, color: Colors.white70),
               ),
             ),
