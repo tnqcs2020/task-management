@@ -19,6 +19,7 @@ class _OverdueTaskState extends State<OverdueTask> {
   Widget build(BuildContext context) {
     return Obx(
       () =>
+          // AuthServices.userCtrl.isLoading.value == false ?
           AuthServices.userCtrl.setGroupDateOverdue().isNotEmpty
               ? CustomScrollView(
                 slivers:
@@ -94,6 +95,19 @@ class _OverdueTaskState extends State<OverdueTask> {
                   ],
                 ),
               ),
+      // : Padding(
+      //   padding: const EdgeInsets.only(bottom: 150),
+      //   child: Center(
+      //     child: SizedBox(
+      //       width: 50,
+      //       height: 50,
+      //       child: LoadingIndicator(
+      //         indicatorType: Indicator.ballSpinFadeLoader,
+      //         colors: const [Colors.indigo],
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }

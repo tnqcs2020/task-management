@@ -59,14 +59,8 @@ class AuthServices {
               .toList();
       tasks.sort((a, b) => a.title!.compareTo(b.title!));
       userCtrl.tasks.value = tasks;
-      if (AuthServices.userCtrl.tasks.isNotEmpty) {
-        AuthServices.userCtrl.isLoading.value = false;
-      }
-    } else {
-      if (AuthServices.userCtrl.tasks.isNotEmpty) {
-        AuthServices.userCtrl.isLoading.value = false;
-      }
     }
+    AuthServices.userCtrl.isLoading.value = false;
   }
 
   static addTask(TaskModel newTask) async {

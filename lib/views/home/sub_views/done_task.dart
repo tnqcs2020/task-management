@@ -19,6 +19,7 @@ class _DoneTaskState extends State<DoneTask> {
   Widget build(BuildContext context) {
     return Obx(
       () =>
+          // AuthServices.userCtrl.isLoading.value == false ?
           AuthServices.userCtrl.setGroupDateDone().isNotEmpty
               ? CustomScrollView(
                 slivers:
@@ -95,6 +96,19 @@ class _DoneTaskState extends State<DoneTask> {
                   ],
                 ),
               ),
+      // : Padding(
+      //   padding: const EdgeInsets.only(bottom: 150),
+      //   child: Center(
+      //     child: SizedBox(
+      //       width: 50,
+      //       height: 50,
+      //       child: LoadingIndicator(
+      //         indicatorType: Indicator.ballSpinFadeLoader,
+      //         colors: const [Colors.indigo],
+      //       ),
+      //     ),
+      // ),
+      // ),
     );
   }
 }

@@ -233,6 +233,7 @@ class _TaskViewState extends State<TaskView> {
                                   fontSize: 16,
                                   color: Colors.black,
                                 ),
+                                textInputAction: TextInputAction.next,
                               ),
                             ),
                             15.h,
@@ -270,6 +271,7 @@ class _TaskViewState extends State<TaskView> {
                                   fontSize: 16,
                                   color: Colors.black,
                                 ),
+                                textInputAction: TextInputAction.next,
                               ),
                             ),
                             15.h,
@@ -384,6 +386,15 @@ class _TaskViewState extends State<TaskView> {
                                                                 .shade700,
                                                       ),
                                                     ),
+                                                    textInputAction:
+                                                        workIndex ==
+                                                                _titleWorkCtrls
+                                                                        .length -
+                                                                    1
+                                                            ? TextInputAction
+                                                                .done
+                                                            : TextInputAction
+                                                                .next,
                                                   ),
                                                 ),
                                               ),

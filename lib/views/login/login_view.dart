@@ -152,7 +152,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => SignupView(),
