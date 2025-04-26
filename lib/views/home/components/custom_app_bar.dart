@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:task_management/models/task_model.dart';
 import 'package:task_management/utils/app_colors.dart';
 import 'package:task_management/utils/auth_services.dart';
+import 'package:task_management/views/search/search_view.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({
@@ -75,7 +76,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       icon: Icon(Icons.close, color: Colors.white, size: 35),
                     ),
                   ]
-              : null,
+              : [
+                IconButton(
+                  icon: Icon(Icons.search, size: 30, color: Colors.white),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SearchView()),
+                    );
+                  },
+                ),
+              ],
       bottom:
           scaffoldKey != null && title == null
               ? TabBar(

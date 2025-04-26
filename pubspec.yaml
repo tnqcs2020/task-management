@@ -22,7 +22,6 @@ dependencies:
   table_calendar: ^3.1.3
   flutter_localizations:
     sdk: flutter
-  redis: ^4.0.0
   flutter_easyloading: ^3.0.5
   flutter_datetime_picker_plus: ^2.2.0
   http: ^1.3.0

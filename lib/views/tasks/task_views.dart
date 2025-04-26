@@ -184,7 +184,7 @@ class _TaskViewState extends State<TaskView> {
               () =>
                   FocusScope.of(
                     context,
-                  ).unfocus(), // Tắt bàn phím khi tap ngoài
+                  ).unfocus(),
           child: Form(
             key: _formKey,
             child: Container(
