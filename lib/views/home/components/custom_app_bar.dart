@@ -46,7 +46,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             () =>
                 scaffoldKey != null || isMenu
                     ? scaffoldKey!.currentState?.openDrawer()
-                    : Navigator.pop(context),
+                    : Navigator.pop(context, true),
         icon: Icon(
           scaffoldKey != null || isMenu ? Icons.menu : CupertinoIcons.back,
           color: Colors.white,

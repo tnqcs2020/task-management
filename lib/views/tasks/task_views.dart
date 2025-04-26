@@ -180,11 +180,7 @@ class _TaskViewState extends State<TaskView> {
                   : null,
         ),
         body: GestureDetector(
-          onTap:
-              () =>
-                  FocusScope.of(
-                    context,
-                  ).unfocus(),
+          onTap: () => FocusScope.of(context).unfocus(),
           child: Form(
             key: _formKey,
             child: Container(

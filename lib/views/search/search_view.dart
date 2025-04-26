@@ -14,12 +14,10 @@ class SearchView extends StatefulWidget {
   State<SearchView> createState() => _SearchViewState();
 }
 
-enum Type { all, inProgress, done, overdue }
-
 class _SearchViewState extends State<SearchView> {
   final TextEditingController _searchController = TextEditingController();
   List<TaskModel> _filteredTasks = [];
-  Type _type = Type.all;
+  int _type = 4;
   List<TaskModel> temp = [];
 
   @override
@@ -29,25 +27,25 @@ class _SearchViewState extends State<SearchView> {
   }
 
   _filterTasks(String query) {
-    if (_type == Type.all) {
+    if (_type == 4) {
       setState(() {
         temp = AuthServices.userCtrl.tasks;
       });
-    } else if (_type == Type.inProgress) {
+    } else if (_type == 0) {
       setState(() {
         temp =
             AuthServices.userCtrl.tasks
                 .where((task) => task.isFinished! == 0)
                 .toList();
       });
-    } else if (_type == Type.done) {
+    } else if (_type == 1) {
       setState(() {
         temp =
             AuthServices.userCtrl.tasks
                 .where((task) => task.isFinished! == 1)
                 .toList();
       });
-    } else if (_type == Type.overdue) {
+    } else if (_type == 2) {
       setState(() {
         temp =
             AuthServices.userCtrl.tasks
@@ -66,7 +64,7 @@ class _SearchViewState extends State<SearchView> {
     });
   }
 
-  void toggleType(Type type) {
+  void toggleType(int type) {
     setState(() {
       _type = type;
       _filterTasks(_searchController.text);
@@ -132,24 +130,24 @@ class _SearchViewState extends State<SearchView> {
                       menuPadding: EdgeInsets.zero,
                       elevation: 3,
                       onSelected: (value) {
-                        if (value == Type.all.toString()) {
-                          toggleType(Type.all);
-                        } else if (value == Type.inProgress.toString()) {
-                          toggleType(Type.inProgress);
-                        } else if (value == Type.done.toString()) {
-                          toggleType(Type.done);
+                        if (value == "4") {
+                          toggleType(4);
+                        } else if (value == "0") {
+                          toggleType(0);
+                        } else if (value == "1") {
+                          toggleType(1);
                         } else {
-                          toggleType(Type.overdue);
+                          toggleType(2);
                         }
                       },
                       itemBuilder:
                           (context) => [
                             PopupMenuItem(
-                              value: Type.all.toString(),
+                              value: "4",
                               child: Text(
                                 'Tất cả',
                                 style:
-                                    _type == Type.all
+                                    _type == 4
                                         ? TextStyle(
                                           color: Colors.red,
                                           fontWeight: FontWeight.bold,
@@ -158,11 +156,11 @@ class _SearchViewState extends State<SearchView> {
                               ),
                             ),
                             PopupMenuItem(
-                              value: Type.inProgress.toString(),
+                              value: "0",
                               child: Text(
                                 'Đang làm',
                                 style:
-                                    _type == Type.inProgress
+                                    _type == 0
                                         ? TextStyle(
                                           color: Colors.red,
                                           fontWeight: FontWeight.bold,
@@ -171,11 +169,11 @@ class _SearchViewState extends State<SearchView> {
                               ),
                             ),
                             PopupMenuItem(
-                              value: Type.done.toString(),
+                              value: "1",
                               child: Text(
                                 'Hoàn thành',
                                 style:
-                                    _type == Type.done
+                                    _type == 1
                                         ? TextStyle(
                                           color: Colors.red,
                                           fontWeight: FontWeight.bold,
@@ -184,11 +182,11 @@ class _SearchViewState extends State<SearchView> {
                               ),
                             ),
                             PopupMenuItem(
-                              value: Type.overdue.toString(),
+                              value: "2",
                               child: Text(
                                 'Trễ hạn',
                                 style:
-                                    _type == Type.overdue
+                                    _type == 2
                                         ? TextStyle(
                                           color: Colors.red,
                                           fontWeight: FontWeight.bold,
@@ -202,11 +200,11 @@ class _SearchViewState extends State<SearchView> {
                   Positioned(
                     bottom: 0,
                     child: Text(
-                      _type == Type.all
+                      _type == 4
                           ? 'Tất cả'
-                          : _type == Type.inProgress
+                          : _type == 0
                           ? 'Đang làm'
-                          : _type == Type.done
+                          : _type == 1
                           ? 'Hoàn thành'
                           : 'Trễ hạn',
                       style: TextStyle(color: Colors.white, fontSize: 13),
@@ -231,8 +229,8 @@ class _SearchViewState extends State<SearchView> {
                         right: 10,
                       ),
                       child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
+                        onTap: () async {
+                          final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder:
@@ -240,8 +238,13 @@ class _SearchViewState extends State<SearchView> {
                                       TaskView(task: task, isModified: false),
                             ),
                           );
+                          if (result == true) {
+                            setState(() {
+                              _filterTasks(_searchController.text);
+                            });
+                          }
                         },
-                        child: TaskWidget(task: task),
+                        child: TaskWidget(task: task, isMore: false),
                       ),
                     );
                   },
