@@ -160,10 +160,11 @@ class TaskWidget extends StatelessWidget {
                                 isDestructiveAction: true,
                                 child: Text('Chuyển'),
                                 onPressed: () async {
+                                  bool success = false;
                                   Navigator.of(context).pop();
                                   EasyLoading.show(status: 'Đang cập nhật...');
                                   try {
-                                    bool success = await AuthServices.markDone(
+                                    success = await AuthServices.markDone(
                                       true,
                                       task,
                                     );
@@ -171,12 +172,12 @@ class TaskWidget extends StatelessWidget {
                                     EasyLoading.showSuccess(
                                       "Đã đánh dấu hoàn thành!",
                                     );
-                                    if (success && onRefresh != null) {
-                                      onRefresh!();
-                                    }
                                   } catch (e) {
                                     EasyLoading.dismiss();
                                     EasyLoading.showError('Có lỗi xảy ra!');
+                                  }
+                                  if (success && onRefresh != null) {
+                                    onRefresh!();
                                   }
                                 },
                               ),
@@ -205,24 +206,24 @@ class TaskWidget extends StatelessWidget {
                                 isDestructiveAction: true,
                                 child: Text('Chuyển'),
                                 onPressed: () async {
+                                  bool success = false;
                                   Navigator.of(context).pop();
                                   EasyLoading.show(status: 'Đang cập nhật...');
                                   try {
-                                    bool success = await AuthServices.markDone(
+                                    success = await AuthServices.markDone(
                                       false,
                                       task,
                                     );
-
                                     EasyLoading.dismiss();
                                     EasyLoading.showSuccess(
                                       "Đã bỏ hoàn thành!",
                                     );
-                                    if (success && onRefresh != null) {
-                                      onRefresh!();
-                                    }
                                   } catch (e) {
                                     EasyLoading.dismiss();
                                     EasyLoading.showError('Có lỗi xảy ra!');
+                                  }
+                                  if (success && onRefresh != null) {
+                                    onRefresh!();
                                   }
                                 },
                               ),
@@ -261,6 +262,7 @@ class TaskWidget extends StatelessWidget {
                                 isDestructiveAction: true,
                                 child: Text('Xoá'),
                                 onPressed: () async {
+                                  bool success = false;
                                   Navigator.of(context).pop();
                                   EasyLoading.show(status: 'Đang xoá...');
                                   try {
@@ -268,19 +270,18 @@ class TaskWidget extends StatelessWidget {
                                         1) {
                                       AuthServices.userCtrl.tasks.value = [];
                                     }
-                                    bool success =
-                                        await AuthServices.deleteTask(
-                                          task.createdBy!,
-                                          task.taskID!,
-                                        );
+                                    success = await AuthServices.deleteTask(
+                                      task.createdBy!,
+                                      task.taskID!,
+                                    );
                                     EasyLoading.dismiss();
                                     EasyLoading.showSuccess('Đã xoá!');
-                                    if (success && onRefresh != null) {
-                                      onRefresh!();
-                                    }
                                   } catch (e) {
                                     EasyLoading.dismiss();
                                     EasyLoading.showError('Có lỗi xảy ra!');
+                                  }
+                                  if (success && onRefresh != null) {
+                                    onRefresh!();
                                   }
                                 },
                               ),
