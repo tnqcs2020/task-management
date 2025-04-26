@@ -76,7 +76,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       icon: Icon(Icons.close, color: Colors.white, size: 35),
                     ),
                   ]
-              : [
+              : title == null
+              ? [
                 IconButton(
                   icon: Icon(Icons.search, size: 30, color: Colors.white),
                   onPressed: () {
@@ -86,7 +87,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     );
                   },
                 ),
-              ],
+              ]
+              : [],
       bottom:
           scaffoldKey != null && title == null
               ? TabBar(

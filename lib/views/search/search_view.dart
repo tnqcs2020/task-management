@@ -244,7 +244,14 @@ class _SearchViewState extends State<SearchView> {
                             });
                           }
                         },
-                        child: TaskWidget(task: task, isMore: false),
+                        child: TaskWidget(
+                          task: task,
+                          onRefresh: () {
+                            setState(() {
+                              _filterTasks(_searchController.text);
+                            });
+                          },
+                        ),
                       ),
                     );
                   },

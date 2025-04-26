@@ -91,6 +91,9 @@ class AuthServices {
     final result = await httpServices.updateTask(task);
     if (result['success']) {
       await getTasks();
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -99,6 +102,9 @@ class AuthServices {
     final result = await httpServices.deleteTask(username, taskID);
     if (result['success']) {
       await getTasks();
+      return true;
+    } else {
+      return false;
     }
   }
 }

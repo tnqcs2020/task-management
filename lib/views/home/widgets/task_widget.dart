@@ -11,11 +11,10 @@ import 'package:task_management/views/home/components/in_progress_circle.dart';
 import 'package:task_management/views/tasks/task_views.dart';
 
 class TaskWidget extends StatelessWidget {
-  TaskWidget({super.key, required this.task, this.isMore = true});
+  TaskWidget({super.key, required this.task, this.onRefresh});
   final TaskModel task;
   final isLoading = false.obs;
-  final bool isMore;
-
+  final VoidCallback? onRefresh;
   double percentWork(List<WorkModel> listWork) {
     int done = 0;
     listWork.forEach((element) {
@@ -126,181 +125,193 @@ class TaskWidget extends StatelessWidget {
               ],
             ),
           ),
-          if (isMore)
-            SizedBox(
-              width: 50,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  PopupMenuButton<String>(
-                    icon: Icon(Icons.more_vert),
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    menuPadding: EdgeInsets.only(),
-                    elevation: 3,
-                    onSelected: (value) async {
-                      if (value == 'done') {
-                        showCupertinoDialog<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoAlertDialog(
-                              title: Text('Xác nhận hoàn thành'),
-                              content: Text(
-                                'Bạn muốn chuyển công việc sang trạng thái hoàn thành?',
-                              ),
-                              actions: <Widget>[
-                                CupertinoDialogAction(
-                                  isDefaultAction: true,
-                                  child: Text('Hủy'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // Đóng dialog
-                                  },
-                                ),
-                                CupertinoDialogAction(
-                                  isDestructiveAction: true,
-                                  child: Text('Chuyển'),
-                                  onPressed: () async {
-                                    Navigator.of(context).pop();
-                                    EasyLoading.show(
-                                      status: 'Đang cập nhật...',
-                                    );
-                                    try {
-                                      await AuthServices.markDone(true, task);
-                                      EasyLoading.dismiss();
-                                      EasyLoading.showSuccess(
-                                        "Đã đánh dấu hoàn thành!",
-                                      );
-                                    } catch (e) {
-                                      EasyLoading.dismiss();
-                                      EasyLoading.showError('Có lỗi xảy ra!');
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else if (value == "none-done") {
-                        showCupertinoDialog<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoAlertDialog(
-                              title: Text('Xác nhận đang làm'),
-                              content: Text(
-                                'Bạn muốn chuyển công việc sang trạng thái đang làm?',
-                              ),
-                              actions: <Widget>[
-                                CupertinoDialogAction(
-                                  isDefaultAction: true,
-                                  child: Text('Hủy'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // Đóng dialog
-                                  },
-                                ),
-                                CupertinoDialogAction(
-                                  isDestructiveAction: true,
-                                  child: Text('Chuyển'),
-                                  onPressed: () async {
-                                    Navigator.of(context).pop();
-                                    EasyLoading.show(
-                                      status: 'Đang cập nhật...',
-                                    );
-                                    try {
-                                      await AuthServices.markDone(false, task);
-                                      EasyLoading.dismiss();
-                                      EasyLoading.showSuccess(
-                                        "Đã bỏ hoàn thành!",
-                                      );
-                                    } catch (e) {
-                                      EasyLoading.dismiss();
-                                      EasyLoading.showError('Có lỗi xảy ra!');
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else if (value == 'modified') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    TaskView(task: task, isModified: true),
-                          ),
-                        );
-                      } else {
-                        // xoa task
-                        showCupertinoDialog<void>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return CupertinoAlertDialog(
-                              title: Text('Xác nhận xoá'),
-                              content: Text(
-                                'Bạn có chắc chắn muốn xoá công việc này không?',
-                              ),
-                              actions: <Widget>[
-                                CupertinoDialogAction(
-                                  isDefaultAction: true,
-                                  child: Text('Huỷ'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(); // Đóng dialog
-                                  },
-                                ),
-                                CupertinoDialogAction(
-                                  isDestructiveAction: true,
-                                  child: Text('Xoá'),
-                                  onPressed: () async {
-                                    Navigator.of(context).pop();
-                                    EasyLoading.show(status: 'Đang xoá...');
-                                    try {
-                                      if (AuthServices.userCtrl.tasks.length ==
-                                          1) {
-                                        AuthServices.userCtrl.tasks.value = [];
-                                      }
-                                      await AuthServices.deleteTask(
-                                        task.createdBy!,
-                                        task.taskID!,
-                                      );
-                                      EasyLoading.dismiss();
-                                      EasyLoading.showSuccess('Đã xoá!');
-                                    } catch (e) {
-                                      EasyLoading.dismiss();
-                                      EasyLoading.showError('Có lỗi xảy ra!');
-                                    }
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
-                    },
-                    itemBuilder:
-                        (context) => [
-                          if (task.isFinished == 0)
-                            PopupMenuItem(
-                              value: 'done',
-                              child: Text('Đánh dấu hoàn thành'),
-                            ),
-                          if (task.isFinished == 1)
-                            PopupMenuItem(
-                              value: 'none-done',
-                              child: Text('Bỏ hoàn thành'),
-                            ),
-                          PopupMenuItem(
-                            value: 'modified',
-                            child: Text('Chỉnh sửa'),
-                          ),
-                          PopupMenuItem(value: 'delete', child: Text('Xoá')),
-                        ],
+          SizedBox(
+            width: 50,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                PopupMenuButton<String>(
+                  icon: Icon(Icons.more_vert),
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                ],
-              ),
+                  menuPadding: EdgeInsets.only(),
+                  elevation: 3,
+                  onSelected: (value) async {
+                    if (value == 'done') {
+                      showCupertinoDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CupertinoAlertDialog(
+                            title: Text('Xác nhận hoàn thành'),
+                            content: Text(
+                              'Bạn muốn chuyển công việc sang trạng thái hoàn thành?',
+                            ),
+                            actions: <Widget>[
+                              CupertinoDialogAction(
+                                isDefaultAction: true,
+                                child: Text('Hủy'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Đóng dialog
+                                },
+                              ),
+                              CupertinoDialogAction(
+                                isDestructiveAction: true,
+                                child: Text('Chuyển'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  EasyLoading.show(status: 'Đang cập nhật...');
+                                  try {
+                                    bool success = await AuthServices.markDone(
+                                      true,
+                                      task,
+                                    );
+                                    EasyLoading.dismiss();
+                                    EasyLoading.showSuccess(
+                                      "Đã đánh dấu hoàn thành!",
+                                    );
+                                    if (success && onRefresh != null) {
+                                      onRefresh!();
+                                    }
+                                  } catch (e) {
+                                    EasyLoading.dismiss();
+                                    EasyLoading.showError('Có lỗi xảy ra!');
+                                  }
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (value == "none-done") {
+                      showCupertinoDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CupertinoAlertDialog(
+                            title: Text('Xác nhận đang làm'),
+                            content: Text(
+                              'Bạn muốn chuyển công việc sang trạng thái đang làm?',
+                            ),
+                            actions: <Widget>[
+                              CupertinoDialogAction(
+                                isDefaultAction: true,
+                                child: Text('Hủy'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              CupertinoDialogAction(
+                                isDestructiveAction: true,
+                                child: Text('Chuyển'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  EasyLoading.show(status: 'Đang cập nhật...');
+                                  try {
+                                    bool success = await AuthServices.markDone(
+                                      false,
+                                      task,
+                                    );
+
+                                    EasyLoading.dismiss();
+                                    EasyLoading.showSuccess(
+                                      "Đã bỏ hoàn thành!",
+                                    );
+                                    if (success && onRefresh != null) {
+                                      onRefresh!();
+                                    }
+                                  } catch (e) {
+                                    EasyLoading.dismiss();
+                                    EasyLoading.showError('Có lỗi xảy ra!');
+                                  }
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (value == 'modified') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  TaskView(task: task, isModified: true),
+                        ),
+                      );
+                    } else {
+                      // xoa task
+                      showCupertinoDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return CupertinoAlertDialog(
+                            title: Text('Xác nhận xoá'),
+                            content: Text(
+                              'Bạn có chắc chắn muốn xoá công việc này không?',
+                            ),
+                            actions: <Widget>[
+                              CupertinoDialogAction(
+                                isDefaultAction: true,
+                                child: Text('Huỷ'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Đóng dialog
+                                },
+                              ),
+                              CupertinoDialogAction(
+                                isDestructiveAction: true,
+                                child: Text('Xoá'),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  EasyLoading.show(status: 'Đang xoá...');
+                                  try {
+                                    if (AuthServices.userCtrl.tasks.length ==
+                                        1) {
+                                      AuthServices.userCtrl.tasks.value = [];
+                                    }
+                                    bool success =
+                                        await AuthServices.deleteTask(
+                                          task.createdBy!,
+                                          task.taskID!,
+                                        );
+                                    EasyLoading.dismiss();
+                                    EasyLoading.showSuccess('Đã xoá!');
+                                    if (success && onRefresh != null) {
+                                      onRefresh!();
+                                    }
+                                  } catch (e) {
+                                    EasyLoading.dismiss();
+                                    EasyLoading.showError('Có lỗi xảy ra!');
+                                  }
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+                  itemBuilder:
+                      (context) => [
+                        if (task.isFinished == 0)
+                          PopupMenuItem(
+                            value: 'done',
+                            child: Text('Đánh dấu hoàn thành'),
+                          ),
+                        if (task.isFinished == 1)
+                          PopupMenuItem(
+                            value: 'none-done',
+                            child: Text('Bỏ hoàn thành'),
+                          ),
+                        PopupMenuItem(
+                          value: 'modified',
+                          child: Text('Chỉnh sửa'),
+                        ),
+                        PopupMenuItem(value: 'delete', child: Text('Xoá')),
+                      ],
+                ),
+              ],
             ),
+          ),
         ],
       ),
     );
