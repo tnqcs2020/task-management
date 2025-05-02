@@ -683,6 +683,7 @@ class _TaskViewState extends State<TaskView> {
                             onTap: () async {
                               if (_formKey.currentState!.validate() &&
                                   deadline != null) {
+                                Navigator.pop(context, true);
                                 EasyLoading.show(
                                   status:
                                       widget.task != null
@@ -703,7 +704,6 @@ class _TaskViewState extends State<TaskView> {
                                         ? "Cập nhật thành công!"
                                         : 'Thêm thành công!',
                                   );
-                                  Navigator.of(context).pop();
                                 } catch (e) {
                                   EasyLoading.dismiss();
                                   EasyLoading.showError('Có lỗi xảy ra!');
@@ -764,7 +764,7 @@ class _TaskViewState extends State<TaskView> {
                                             isDestructiveAction: true,
                                             child: Text('Chuyển'),
                                             onPressed: () async {
-                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop(true);
                                               EasyLoading.show(
                                                 status: 'Đang cập nhật...',
                                               );
@@ -826,7 +826,7 @@ class _TaskViewState extends State<TaskView> {
                                             isDestructiveAction: true,
                                             child: Text('Chuyển'),
                                             onPressed: () async {
-                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop(true);
                                               EasyLoading.show(
                                                 status: 'Đang cập nhật...',
                                               );
